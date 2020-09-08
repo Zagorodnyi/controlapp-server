@@ -2,23 +2,17 @@ const express = require("express");
 const app = express();
 const server = require("http").createServer(app);
 const io = require("socket.io")(server);
-// const midi = require("easymidi");
-const port = process.env.PORT || 80;
 const cors = require("cors");
+const port = process.env.PORT || 80;
+
 const Timer = require("./classes/Timer");
 const events = require("./utils/CONST_events");
 
-// io.listen(3000);
-
 app.use(cors());
-app.use(express.static(__dirname + "/public"));
+// app.use(express.static(__dirname + "/public"));
 
 app.get("/", (req, res) => {
-  res.sendFile("index.html");
-});
-
-app.get("/timer", (req, res) => {
-  res.sendFile("timer/index.html");
+  res.send("Opps, nothing here");
 });
 
 // Timer socket setup
@@ -70,18 +64,11 @@ controlApp.on("connection", (socket) => {
   console.log(`Connected ${socket.id}`);
 
   socket.on(events.NOTE_ON, (msg) => {
+    if (!msg.channel || !msg.note) return;
     socket.broadcast.emit(events.NOTE_ON, msg);
   });
 });
 
-// // Momitoring MIDI Income messages and available Ports
-// // Just for Debugging
-// console.log(midi.getOutputs());
-// const input = new midi.Input("IAC Driver ControlApp");
-// input.on("noteon", (note) => {
-//   console.log(note, "recieved");
-// });
-
-server.listen(port, () =>
-  console.log(`Example app listening on port ${port}!`)
-);
+server.listen(port, () => {
+  console.log(`Listening on port ${port}!`);
+});
