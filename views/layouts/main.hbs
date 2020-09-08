@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../assets/main.css">
+    <title>HBS main layout</title>
+</head>
+
+<body class='app'>
+    {{{body}}}
+</body>
+<script src="../socket.io.js"></script>
+
+<script>
+
+    const socket = io("http://172.20.10.3:3030/timer", {
+        transports: ["websocket"],
+    });
+    socket.once('success', () => { console.log('ready') })
+
+    socket.on("TIMER_DATA", (data) => console.log(`TIMER  ${data}`))
+    socket.on("CAPTURE_DATA", (data) => console.log('CAPTURE ' + data))
+
+
+    const click = () => {
+        socket.emit("CAPTURE")
+    }
+
+    const timer = () => {
+        socket.emit("TIMER_START", { minutes: 3, seconds: 03 })
+    }
+    const stopTimer = () => {
+        socket.emit('TIMER_STOP')
+    }
+
+    const changeLayout = () => {
+        socket.emit('LAYOUT')
+    }
+
+    document.querySelector('#click').addEventListener('click', click)
+    document.querySelector('#layout').addEventListener('click', changeLayout)
+    document.querySelector('#timer').addEventListener('click', timer)
+    document.querySelector('#stop').addEventListener('click', stopTimer)
+
+
+</script>
+
+</html>
+{{!-- const res = await fetch("http://127.20.10.3:3003/event") --}}
+
+
+{{!-- const click = () => {
+        socket.emit("NOTEON", { channel: 1, note: 'C2' })
+    } --}}
