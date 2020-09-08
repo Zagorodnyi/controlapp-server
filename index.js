@@ -9,10 +9,11 @@ const Timer = require("./classes/Timer");
 const events = require("./utils/CONST_events");
 
 app.use(cors());
-// app.use(express.static(__dirname + "/public"));
 
-app.get("/", (req, res) => {
-  res.send("Opps, nothing here");
+app.use(express.static(__dirname + "/public"));
+
+app.get("/confidence", (req, res) => {
+  res.sendFile("index.html", { root: `${__dirname}/public` });
 });
 
 // Timer socket setup
