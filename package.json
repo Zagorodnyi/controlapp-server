@@ -1,9 +1,13 @@
 {
   "name": "staff_dashboard",
   "version": "1.0.0",
+  "engines": {
+    "node": "12.x"
+  },
   "description": "dashboard for managing confidence monitor, OBS and resolume via Midi",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "test": "nodemon index.js"
   },
   "repository": {
@@ -18,10 +22,8 @@
   "homepage": "https://github.com/Zagorodnyi/staff_dashboard#readme",
   "dependencies": {
     "cors": "^2.8.5",
-    "easymidi": "^2.0.0",
     "express": "^4.17.1",
     "express-handlebars": "^5.1.0",
-    "midi": "^1.0.0",
     "socket.io": "^2.3.0",
     "socket.io-client": "^2.3.0"
   },

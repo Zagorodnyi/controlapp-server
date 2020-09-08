@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const server = require("http").createServer(app);
 const io = require("socket.io")(server);
-const midi = require("easymidi");
+// const midi = require("easymidi");
 const port = 3003;
 const cors = require("cors");
 const Timer = require("./classes/Timer");
@@ -74,13 +74,13 @@ controlApp.on("connection", (socket) => {
   });
 });
 
-// Momitoring MIDI Income messages and available Ports
-// Just for Debugging
-console.log(midi.getOutputs());
-const input = new midi.Input("IAC Driver ControlApp");
-input.on("noteon", (note) => {
-  console.log(note, "recieved");
-});
+// // Momitoring MIDI Income messages and available Ports
+// // Just for Debugging
+// console.log(midi.getOutputs());
+// const input = new midi.Input("IAC Driver ControlApp");
+// input.on("noteon", (note) => {
+//   console.log(note, "recieved");
+// });
 
 server.listen(port, () =>
   console.log(`Example app listening on port ${port}!`)
