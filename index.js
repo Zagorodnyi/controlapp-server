@@ -65,7 +65,6 @@ controlApp.on("connection", (socket) => {
   console.log(`Connected ${socket.id}`);
 
   socket.on(events.NOTE_ON, (msg) => {
-    if (!msg.channel || !msg.note) return;
     socket.broadcast.emit(events.NOTE_ON, msg);
   });
 });
