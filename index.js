@@ -7,6 +7,7 @@ const io = require("socket.io")(server);
 const bodyparser = require("body-parser");
 const MongoDb = require("./src/utils/MongoDb")();
 const cors = require("cors");
+const morgan = require('morgan')
 require("dotenv").config();
 const { start } = require("./src/sockets/socketEvents");
 start(io);
@@ -15,6 +16,7 @@ const API = require("./src/API/endpoints");
 
 // middleware
 app.use(cors());
+app.use(morgan('combined'))
 app.use(bodyparser.json());
 app.use(
   bodyparser.urlencoded({
