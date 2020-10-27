@@ -1,22 +1,32 @@
-const express = require("express");
-const router = express.Router();
+
+import express, { Request, Response, NextFunction } from 'express'
+import { MongooseDocument } from 'mongoose'
+import { Namespace } from 'socket.io'
+import EventChannel from '../classes/EventEmmiter'
 const Settings = require("../models/Settings");
 const events = require("../utils/CONST_events");
-const { confidence } = require("../sockets/socketEvents");
+const router = express.Router();
 
-router.get("/confidence/settings", async (req, res) => {
+
+let confidence: Namespace
+EventChannel.on('socket', (data: Namespace) => {
+  confidence = data
+})
+
+router.get("/confidence/settings", async (req: Request, res: Response) => {
   try {
-    const response = await Settings.findOne({
+    const response: MongooseDocument = await Settings.findOne({
       _id: "5f94baa6b182f52ffdf5c7b9",
     });
     res.status(200).json({ ...response });
+
   } catch (err) {
     res.status(500).json({ error: err.code });
     console.log(err);
   }
 });
 
-router.post("/confidence/settings", async (req, res) => {
+router.post("/confidence/settings", async (req: Request, res: Response) => {
   const newSettings = {
     scale: req.body.scale,
     currentDevice: req.body.currentDevice,
@@ -38,4 +48,4 @@ router.post("/confidence/settings", async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

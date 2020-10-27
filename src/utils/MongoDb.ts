@@ -1,7 +1,7 @@
 require("dotenv").config();
-const mongoose = require("mongoose");
+import { default as mongoose } from 'mongoose'
 
-module.exports = startDB = async () => {
+const startDB = async () => {
   const url = `mongodb+srv://${process.env.MONGO_DB_USERNAME}:${process.env.MONGO_DB_PASSWORD}@cluster0.8vq3r.mongodb.net/Confidence`;
 
   try {
@@ -13,3 +13,5 @@ module.exports = startDB = async () => {
     console.log(err);
   }
 };
+
+export default startDB

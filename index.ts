@@ -1,18 +1,23 @@
-const express = require("express");
-const app = express();
-const server = require("http").createServer(app);
-// SOCKET
-const io = require("socket.io")(server);
 // MIDDLEWARE
 const bodyparser = require("body-parser");
-const MongoDb = require("./src/utils/MongoDb")();
 const cors = require("cors");
 const morgan = require('morgan')
+
+import express, { Request, Response } from 'express'
+const app = express();
+const server = require("http").createServer(app);
+
+import MongoDb from "./src/utils/MongoDb"
+import { socketStart } from "./src/sockets/socketEvents"
+import API from "./src/API/endpoints"
+// SOCKET
+const io = require("socket.io")(server);
+
+io.listen(server)
+MongoDb()
+socketStart(io);
 require("dotenv").config();
-const { start } = require("./src/sockets/socketEvents");
-start(io);
 // API
-const API = require("./src/API/endpoints");
 
 // middleware
 app.use(cors());
@@ -25,10 +30,10 @@ app.use(
 );
 app.use("/api", API);
 
-app.get("/", (req, res) => {
+app.get("/", (req: Request, res: Response) => {
   res.redirect("/confidence");
 });
-app.get("/confidence", (req, res) => {
+app.get("/confidence", (req: Request, res: Response) => {
   res.sendFile("index.html", { root: `${__dirname}/public` });
 });
 

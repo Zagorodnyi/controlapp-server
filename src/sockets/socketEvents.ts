@@ -1,14 +1,17 @@
+import * as socketio from 'socket.io'
+import EventChannel from '../classes/EventEmmiter'
 const Timer = require("../classes/Timer");
 const events = require("../utils/CONST_events");
 
-const exportModule = {};
 
-const socketStart = (io) => {
+const socketStart = (io: socketio.Server) => {
   // Timer socket setup
-  const confidence = io.of("/timer");
-  exportModule.confidence = confidence;
-  let timerID;
-  let captureId;
+  const confidence: socketio.Namespace = io.of("/timer");
+  setTimeout(() => {
+    EventChannel.emit('socket', confidence)
+  }, 0)
+  let timerID: string;
+  let captureId: string;
 
   confidence.on("connection", (socket) => {
     console.log("Timer connected");
@@ -45,7 +48,7 @@ const socketStart = (io) => {
   });
 
   // Socket communication setup
-  const controlApp = io.of("/controlApp");
+  const controlApp: socketio.Namespace = io.of("/controlApp");
 
   // Listeners configuration
   controlApp.on("connection", (socket) => {
@@ -58,6 +61,4 @@ const socketStart = (io) => {
   });
 };
 
-exportModule.start = socketStart;
-
-module.exports = exportModule;
+export { socketStart }
