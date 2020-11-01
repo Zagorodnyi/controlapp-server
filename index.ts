@@ -13,9 +13,8 @@ import API from "./src/API/endpoints"
 // SOCKET
 const io = require("socket.io")(server);
 
-io.listen(server)
-MongoDb()
 socketStart(io);
+MongoDb()
 require("dotenv").config();
 // API
 

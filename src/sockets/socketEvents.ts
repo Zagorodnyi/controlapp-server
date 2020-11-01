@@ -10,6 +10,7 @@ const socketStart = (io: socketio.Server) => {
   setTimeout(() => {
     EventChannel.emit('socket', confidence)
   }, 0)
+
   let timerID: string;
   let captureId: string;
 
