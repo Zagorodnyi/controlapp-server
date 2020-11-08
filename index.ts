@@ -33,10 +33,10 @@ app.get("/", (req: Request, res: Response) => {
   res.redirect("/confidence");
 });
 app.get("/confidence", (req: Request, res: Response) => {
-  res.sendFile("index.html", { root: `${__dirname}/public` });
+  res.sendFile("index.html", { root: `${__dirname}/../public` });
 });
 
-app.use(express.static(__dirname + "/public"));
+app.use(express.static(__dirname + "/../public"));
 
 const port = process.env.PORT || 80;
 
