@@ -1,5 +1,4 @@
-
-import express, { Request, Response, NextFunction } from 'express'
+import express, { Request, Response } from 'express'
 import { MongooseDocument } from 'mongoose'
 import { Namespace } from 'socket.io'
 import EventChannel from '../classes/EventEmmiter'
@@ -13,12 +12,16 @@ EventChannel.on('socket', (data: Namespace) => {
   confidence = data
 })
 
-router.get("/confidence/settings", async (req: Request, res: Response) => {
+router.get("/confidence/settings/:deviceId", async (req: Request, res: Response) => {
   try {
     const response: MongooseDocument = await Settings.findOne({
-      _id: "5f94baa6b182f52ffdf5c7b9",
+      deviceId: req.params.deviceId,
     });
-    res.status(200).json({ ...response });
+    if (response) {
+      res.status(200).json({ ...response });
+    } else {
+      res.status(204).json({ message: 'no settings' });
+    }
 
   } catch (err) {
     res.status(500).json({ error: err.code });
@@ -26,19 +29,34 @@ router.get("/confidence/settings", async (req: Request, res: Response) => {
   }
 });
 
-router.post("/confidence/settings", async (req: Request, res: Response) => {
+router.post("/confidence/settings/:deviceId", async (req: Request, res: Response) => {
   const newSettings = {
+    deviceId: req.params.deviceId,
+    socketId: req.body.socketId,
     scale: req.body.scale,
     currentDevice: req.body.currentDevice,
+    deviceList: req.body.deviceList,
+    deviceName: req.body.deviceName,
+    connected: true,
+    bigTimeLayout: req.body.bigTimeLayout,
   };
 
   try {
-    await Settings.updateOne(
-      {
-        _id: "5f94baa6b182f52ffdf5c7b9",
-      },
-      newSettings
-    );
+    const doc = await Settings.findOne({
+      deviceId: req.params.deviceId,
+    });
+    if (doc) {
+      await Settings.updateOne(
+        {
+          deviceId: req.params.deviceId,
+        },
+        newSettings
+      );
+    } else {
+      const newDoc = new Settings(newSettings)
+      newDoc.save()
+    }
+
     confidence.emit(events.SETTINGS_CHANGED, newSettings);
 
     res.status(201).json({ message: "Success" });

@@ -11,6 +11,32 @@ const settings = new Schema({
     type: String,
     required: true,
   },
+  deviceList: {
+    type: Array,
+    required: true
+  },
+  connected: {
+    type: Boolean,
+    required: true
+  },
+  socketId: {
+    type: String,
+    required: true
+  },
+  bigTimeLayout: {
+    type: Boolean,
+    required: true
+  },
+  deviceId: {
+    type: String,
+    required: true,
+  },
+  deviceName: {
+    type: String,
+    required: true,
+  }
+
+
 });
 
 module.exports = model("Setings", settings);

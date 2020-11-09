@@ -20,7 +20,7 @@ require("dotenv").config();
 
 // middleware
 app.use(cors());
-app.use(morgan('combined'))
+// app.use(morgan('combined'))
 app.use(bodyparser.json());
 app.use(
   bodyparser.urlencoded({

@@ -1,7 +1,10 @@
 import * as socketio from 'socket.io'
 import EventChannel from '../classes/EventEmmiter'
+import { MongooseDocument } from 'mongoose'
 const Timer = require("../classes/Timer");
 const events = require("../utils/CONST_events");
+const Settings = require("../models/Settings");
+
 
 
 const socketStart = (io: socketio.Server) => {
@@ -15,7 +18,21 @@ const socketStart = (io: socketio.Server) => {
   let captureId: string;
 
   confidence.on("connection", (socket) => {
-    console.log("Timer connected");
+    (async () => {
+      try {
+        await Settings.updateOne(
+          {
+            deviceId: socket.request._query.deviceId,
+          },
+          { connected: socket.connected }
+        )
+        console.log('updated socket status', socket.connected)
+      }
+      catch (err) {
+        console.log(err)
+      }
+    })()
+    console.log("Timer connected", socket.id, socket.connected);
     socket.emit(events.SUCCESS);
 
     socket.on(events.TIMER_START, (params) => {
@@ -46,6 +63,24 @@ const socketStart = (io: socketio.Server) => {
     socket.on(events.LAYOUT, () => {
       confidence.emit(events.LAYOUT);
     });
+
+    socket.on('disconnect', () => {
+      (async () => {
+        try {
+          await Settings.updateOne(
+            {
+              deviceId: socket.request._query.deviceId,
+            },
+            { connected: socket.connected }
+          )
+          console.log('updated socket status', socket.connected)
+        }
+        catch (err) {
+          console.log(err)
+        }
+      })()
+      console.log('disconnected', socket.id, socket.connected)
+    })
   });
 
   // Socket communication setup
