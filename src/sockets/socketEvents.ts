@@ -26,7 +26,7 @@ const socketStart = (io: socketio.Server) => {
           },
           { connected: socket.connected }
         )
-        console.log('updated socket status', socket.connected)
+        confidence.emit('STATUS_CHANGED')
       }
       catch (err) {
         console.log(err)
@@ -73,13 +73,12 @@ const socketStart = (io: socketio.Server) => {
             },
             { connected: socket.connected }
           )
-          console.log('updated socket status', socket.connected)
+          confidence.emit('STATUS_CHANGED')
         }
         catch (err) {
           console.log(err)
         }
       })()
-      console.log('disconnected', socket.id, socket.connected)
     })
   });
 

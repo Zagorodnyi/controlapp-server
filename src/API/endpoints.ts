@@ -29,18 +29,32 @@ router.get("/confidence/settings/:deviceId", async (req: Request, res: Response)
   }
 });
 
+
+router.get("/confidence/settings/", async (req: Request, res: Response) => {
+  try {
+    const response: MongooseDocument = await Settings.find();
+    if (response) {
+      res.status(200).json(response);
+    } else {
+      res.status(204).json({ message: 'no settings' });
+    }
+
+  } catch (err) {
+    res.status(500).json({ error: err.code });
+    console.log(err);
+  }
+});
+
+
+
+
+
 router.post("/confidence/settings/:deviceId", async (req: Request, res: Response) => {
   const newSettings = {
     deviceId: req.params.deviceId,
-    socketId: req.body.socketId,
-    scale: req.body.scale,
-    currentDevice: req.body.currentDevice,
-    deviceList: req.body.deviceList,
-    deviceName: req.body.deviceName,
     connected: true,
-    bigTimeLayout: req.body.bigTimeLayout,
+    ...req.body
   };
-
   try {
     const doc = await Settings.findOne({
       deviceId: req.params.deviceId,
@@ -56,8 +70,7 @@ router.post("/confidence/settings/:deviceId", async (req: Request, res: Response
       const newDoc = new Settings(newSettings)
       newDoc.save()
     }
-
-    confidence.emit(events.SETTINGS_CHANGED, newSettings);
+    confidence.emit(events.SETTINGS_CHANGED, req.params.deviceId);
 
     res.status(201).json({ message: "Success" });
   } catch (err) {
