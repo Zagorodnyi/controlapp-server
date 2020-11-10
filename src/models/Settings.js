@@ -33,7 +33,6 @@ const settings = new Schema({
   },
   deviceName: {
     type: String,
-    required: true,
   }
 
 
