@@ -3,8 +3,10 @@ import { MongooseDocument } from 'mongoose'
 import { Namespace } from 'socket.io'
 import EventChannel from '../classes/EventEmmiter'
 const Settings = require("../models/Settings");
+const Manifest = require("../models/Manifest");
 const events = require("../utils/CONST_events");
 const router = express.Router();
+
 
 
 let confidence: Namespace
@@ -33,6 +35,22 @@ router.get("/confidence/settings/:deviceId", async (req: Request, res: Response)
 router.get("/confidence/settings/", async (req: Request, res: Response) => {
   try {
     const response: MongooseDocument = await Settings.find();
+    if (response) {
+      res.status(200).json(response);
+    } else {
+      res.status(204).json({ message: 'no settings' });
+    }
+
+  } catch (err) {
+    res.status(500).json({ error: err.code });
+    console.log(err);
+  }
+});
+
+router.get("/release/manifest/", async (req: Request, res: Response) => {
+  console.log('manifest')
+  try {
+    const response: MongooseDocument = await Manifest.findOne();
     if (response) {
       res.status(200).json(response);
     } else {
