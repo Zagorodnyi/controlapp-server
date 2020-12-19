@@ -8,7 +8,7 @@ module.exports = class Timer {
   startCountdown = (socket, { minutes, seconds }) => {
     this.seconds = seconds;
     this.minutes = minutes;
-    socket.broadcast.emit(events.TIMER_DATA, {
+    socket.emit(events.TIMER_DATA, {
       minutes:
         this.minutes.toString().length === 1
           ? `0${this.minutes}`
@@ -22,7 +22,7 @@ module.exports = class Timer {
       if (this.seconds === 0) {
         this.minutes--;
         this.seconds = 59;
-        socket.broadcast.emit(events.TIMER_DATA, {
+        socket.emit(events.TIMER_DATA, {
           minutes:
             this.minutes.toString().length === 1
               ? `0${this.minutes}`
@@ -34,7 +34,7 @@ module.exports = class Timer {
         });
       } else {
         this.seconds--;
-        socket.broadcast.emit(events.TIMER_DATA, {
+        socket.emit(events.TIMER_DATA, {
           minutes:
             this.minutes.toString().length === 1
               ? `0${this.minutes}`
