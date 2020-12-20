@@ -40,7 +40,7 @@ const socketStart = (io: socketio.Server) => {
       const seconds = params.seconds ? parseInt(params.seconds) : 0;
       if (minutes === 0 && seconds === 0) return;
       Timer.stop(timerID);
-      timerID = new Timer().startCountdown(socket, {
+      timerID = new Timer().startCountdown(confidence, {
         minutes: minutes,
         seconds: seconds,
       });
